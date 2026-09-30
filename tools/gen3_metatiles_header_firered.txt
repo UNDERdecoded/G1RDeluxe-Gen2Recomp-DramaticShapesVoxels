@@ -1,0 +1,84 @@
+-- ===========================================================================
+-- WHAT EVERY METATILE FIRERED PLACES IS MADE OF.  Generated; do not hand-edit
+-- -- regenerate it, with tools/gen3_census.lua and then
+-- tools/gen3_metatiles_gen.lua under VERSION=firered.
+--
+-- The FireRed counterpart of data/gen3_metatiles.lua, built the same way and
+-- emitting the same row shape.  Built by walking all 425 FireRed maps
+-- (DERIVED), recording every metatile placed and the collision and elevation
+-- the blockdata pairs it with, then reading the sixteen pixel rows of its art
+-- and reducing each to a material.  8,146 rows over 61 owning tilesets
+-- (DERIVED), covering 233,741 placed cells (DERIVED) -- every distinct
+-- metatile the cartridge places, with none left out.
+--
+-- WHY IT CANNOT BE EMERALD'S FILE.  Both cartridges key this table by the
+-- tileset's ROM ADDRESS, and the two ROMs put their tilesets in different
+-- places: Hoenn's owners run P03DF704..S03DFDFC, Kanto's P02D4A94..S02D50DC
+-- (DERIVED, and disjoint).  Even the id inside an owner means something
+-- else: FireRed has TWO primaries and fifty-nine secondaries (DERIVED) where
+-- Hoenn has three and seventy.  main.lua's EMERALD_KEYED loader therefore
+-- reads this file for FireRed and Emerald's for Emerald, and gives a Gen 3
+-- game with no file of its own an EMPTY table rather than the other's
+-- answers.
+--
+-- AND WHERE THE SECONDARY BEGINS IS NOT 512 HERE.  FireRed splits the
+-- metatile id space at 640, not Emerald's 512 (STATED: the cartridge's own
+-- gen3Layout.metatilesInPrimary, which lib/Gen3.lua inPrimary() reads and
+-- ctx.metaRole asks on every lookup).  An id of 600 is the PRIMARY's on this
+-- cartridge and the SECONDARY's on Hoenn, so a table built with 512 baked in
+-- would mis-own the whole 512..639 band.
+--
+-- WHAT A ROW SAYS is documented once, in data/gen3_metatiles.lua's header:
+--
+--   { art, material, cap, face, kind, motif, axis, facing, ledge }
+--
+-- and it says exactly the same things here.  In particular it still does NOT
+-- say whether you can walk on it -- in Gen 3 collision belongs to the CELL,
+-- not the metatile, and Gen3.roleAt resolves the two together per cell.
+--
+-- BLUE IS NOT THE SAME AS WATER, and this file used to say it was.  The
+-- material reader had no category for a cool grey or for painted cyan, and a
+-- BARE `blue is the largest channel -> water` caught everything the other
+-- rules declined: 57,339 cells came back `water` and 18,388 of them (32.1%)
+-- sat on a metatile the cartridge names water nowhere.  Saffron Gym read 607
+-- of its 725 cells as sea, Silph Co 1F 489 of 792, Seafoam Islands B1F 744 of
+-- 874, Cerulean Cave 2F 563 of 920, and 951 cells of Route 17 -- the CYCLING
+-- ROAD, concrete, behaviour 0x59 -- likewise.  Two tests now stand between
+-- blue art and a water reading, and NEITHER can touch a cell the cartridge
+-- itself names water; see mat() in tools/gen3_metatiles_gen.lua for the
+-- measurement behind each:
+--
+--   SATURATION.  Where the cartridge is silent, water must be blue at least
+--   twice red.  Kanto's ocean is 74,123,222 and 49,98,180 -- r/b 0.33 and
+--   0.27; Silph Co's floor is 131,189,197 -- 0.66.  18,388 -> 1,288 cells.
+--
+--   THE OWNING TILESET.  Where the cartridge is silent AND the owner carries
+--   no water-behaviour metatile at all, art may not claim water.  999 of the
+--   1,288 sat in ten such owners: 528 cells of Poke Mart floor at
+--   106,164,238, 301 cells of flat 98,164,222 SKY around Navel Rock's summit,
+--   the Elite Four's floors (Lance's teal, Lorelei's ICE), the Trainer Tower
+--   and Celadon store roofs, Pewter Museum, the Hall of Fame.  1,288 -> 289.
+--
+-- Region-wide the false reading falls 18,388 -> 289 cells (-98.4%), the 289
+-- that remain are all in tilesets that DO draw water elsewhere (a town's
+-- decorative basin, twelve cells at a time), and not one cell of stated water
+-- is lost: 38,951 before and after, and the 987 cells the cartridge calls
+-- water where the art does not are 987 still.
+--
+-- HOW THIS CARTRIDGE COMPARES, so that an obviously wrong skew is visible
+-- (DERIVED).  The Emerald column is the SHIPPED table, which still carries
+-- the old reading, so the third row is what Emerald reads when the same rule
+-- is applied to it -- that is the row this file should be compared against,
+-- and the two cartridges move together, water included:
+--
+--                   surface    brow     face   banded      rock    sand   green   water
+--   FireRed          24.31%  53.28%   14.24%    8.18%     9.48%  24.38%  17.35%   5.07%
+--   Emerald shipped  38.63%  33.76%   20.19%    7.43%    22.01%  22.68%  14.38%  20.76%
+--   Emerald, same rule
+--                    22.92%  48.12%   19.94%    9.02%    20.62%  21.31%  15.00%   5.02%
+--
+-- Kanto draws fewer sheer rock walls than Hoenn and more drawn-over lips --
+-- it has no Route 111 desert plateau and no Meteor Falls, and its one long
+-- climb, Rock Tunnel to Route 10, is built from ledges rather than faces --
+-- and that relationship survives the change unaltered.
+-- ===========================================================================

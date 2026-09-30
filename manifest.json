@@ -1,0 +1,21 @@
+{
+  "id": "DRAMATIC_SHAPE",
+  "name": "Gen2Recomp Dramatic Shape Voxel Mod (gen1recomp)",
+  "version": "0.7.75",
+  "api": 2,
+  "entry": "main.lua",
+  "profile": "content",
+  "category": "GRAPHICS",
+  "games": ["gen1", "emerald"],
+  "game_version": "0.0.0-dev || >=0.1.37 <3.0.0",
+  "priority": 100,
+  "dependencies": [],
+  "optional_dependencies": [],
+  "conflicts": [],
+  "permissions": [
+    "engine_internals"
+  ],
+  "affects_link": false,
+  "description": "Voxel overworld port for gen1recomp: Red, Blue, Yellow and native Emerald. Select VOXEL in Emerald's Options or Mod Options, or press 3 in the field to cycle cameras. OFF restores the native world. Emerald uses the existing authored buildings, trees and terrain; movement remains grid-based and Emerald staged battles and VR are not yet ported.",
+  "update_check": false
+}
